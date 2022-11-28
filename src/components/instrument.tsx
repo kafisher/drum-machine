@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { SoundGenerator } from '../sound-generators/sound-generators';
 import { Kick } from '../sound-generators/kick';
 import { Snare } from '../sound-generators/snare';
 import { Clap } from '../sound-generators/clap';
@@ -13,30 +12,33 @@ export interface InstrumentProps {
     generator: Instruments;
     steps?: boolean[];
     selected?: boolean;
+    ctx: AudioContext;
     handleClick?: (generator: string, steps: boolean[]) => void;
 }
 
 export class Instrument extends React.Component<InstrumentProps, any> {
     private sound: any;
-    private ctx: AudioContext;
+    // private ctx: AudioContext;
     private loopId: number;
 
     constructor(props: any ) {
         super(props);
-        this.ctx = new AudioContext;
-        // this.sound = new Kick(this.ctx);
+        // this.ctx = new AudioContext();
         switch (props.generator) {
             case 'Kick':
-                this.sound = new Kick(this.ctx);
+                // this.sound = new Kick(this.ctx);
+                this.sound = new Kick(this.props.ctx);
                 break;
             case 'Snare':
-                this.sound = new Snare(this.ctx);
+                // this.sound = new Snare(this.ctx);
+                this.sound = new Snare(this.props.ctx);
                 break;
             case 'HiHat':
-                this.sound = new HiHat(this.ctx);
+                this.sound = new HiHat(this.props.ctx);
                 break;
             case 'Clap':
-                this.sound = new Clap(this.ctx);
+                this.sound = new Clap(this.props.ctx);
+                // this.sound = new Clap(this.ctx);
                 break;
         }
         this.state = {
@@ -44,21 +46,12 @@ export class Instrument extends React.Component<InstrumentProps, any> {
                 false, false, false, false, false, false, false, 
                 false, false],
         }
-
-        
-
-        Transport.bpm.value = 120;
+        // Transport.bpm.value = 120;
         this.loopId = 0;
-
-
-        // Transport.loop = true;
-        // Transport.loopEnd = '1m';
-        // Transport.start();
     }
 
     componentDidUpdate() {
-        // Tone.start();
-        // this.ctx.resume();
+
         if (this.props.steps && !areEqual(this.props.steps, this.state.steps)) {
             this.setState({
                 steps: this.props.steps.slice(0),
@@ -68,7 +61,7 @@ export class Instrument extends React.Component<InstrumentProps, any> {
     }
 
     createLoop = () => {
-        console.log('staring loop ');
+        console.log('starting loop ');
         if (!this.props.steps) { return; }
         Transport.clear(this.loopId);
         const loop = (time: number) => {
@@ -79,29 +72,15 @@ export class Instrument extends React.Component<InstrumentProps, any> {
             });
         }
         this.loopId = Transport.schedule(loop, "0");
-
-
         Tone.start();
-        this.ctx.resume();
- 
-        
+        //this.ctx.resume();
+        this.props.ctx.resume();
     }
 
     handleClick = () => {
         console.log(this.props);
         if (this.props.handleClick) this.props.handleClick(this.props.generator, this.state.steps.slice(0));
     }
-    // public handleClick = () => {
-    //     // this.kick.trigger(this.ctx.currentTime);
-    //     // this.ctx = new AudioContext();
-    //     // this.kick = new Kick(this.ctx);
-    //     // this.ctx.resume();
-    //     Tone.start();
-    //     this.createLoop();
-    //     Transport.start();
-    //     // Transport.debug = true;
-    //     // console.log(Transport);
-    // }
 
     render() {
         const InstrumentStyle = {
@@ -123,7 +102,6 @@ export class Instrument extends React.Component<InstrumentProps, any> {
 }
 
 export const areEqual = (ar1, ar2) => {
-    // return JSON.stringify(ar1)==JSON.stringify(ar2);
     if (ar1.length !== ar2.length) return false;
     let equal = true;
     ar1.forEach((el, idx) => {
