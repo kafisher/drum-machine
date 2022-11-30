@@ -7,19 +7,18 @@ import { PlayPause } from './playpause';
 import * as Tone from 'tone';
 
 export class TransportComponent extends React.Component<any, any> {
-    // private ctx: AudioContext;    
     constructor(props) {
         super(props);
         this.state = {
-            steps: [false, false, false, false, false, false, false, 
-                false, false, false, false, false, false, false, 
+            steps: [false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false,
                 false, false],
-                selected: null, 
-                bpm: 120,
+            selected: null,
+            bpm: 120,
+            activeStep: 0,
         }
         Transport.loop = true;
         Transport.loopEnd = '1m'
-        // this.ctx = new AudioContext();
     }
 
     //Hack to get audio to work 
@@ -34,7 +33,6 @@ export class TransportComponent extends React.Component<any, any> {
 
     play = () => {
         Transport.start();
-      
     }
 
     private handleStepChange = (id: number) => {
@@ -43,6 +41,13 @@ export class TransportComponent extends React.Component<any, any> {
         this.setState({
             steps: s,
         })
+    }
+
+    private handleActiveStepChange = (id: number) => {
+        this.setState({
+            activeStep: id
+        })
+
     }
 
     private selectInstrument = (selected: string, steps: boolean[]) => {
@@ -56,26 +61,20 @@ export class TransportComponent extends React.Component<any, any> {
         }
     }
 
-    // handleBPMChange = (bpm: number) => {
-    //     Transport.bpm.value = bpm;
-    //     this.setState({ bpm });
-    // }
-
     render() {
         return (
             <div>
-                <h1 style={{ color: 'red'}}>Web Drum Machine</h1>
+                <h1 style={{ color: 'red' }}>Web Drum Machine</h1>
                 <div style={{ display: 'block' }}>
-                    {/* <BPM handleChange={this.handleBPMChange} value={this.state.bpm} /> */}
                     <PlayPause play={this.play} pause={this.pause} />
                 </div>
                 <Container steps={this.state.steps} selectedInstrument={this.state.selected}>
-                    <Instrument ctx={this.props.ctx} key="Kick" generator="Kick" handleClick={this.selectInstrument}/>
-                    <Instrument ctx={this.props.ctx} key="Snare" generator="Snare" handleClick={this.selectInstrument} />
-                    <Instrument ctx={this.props.ctx} key="Clap" generator="Clap" handleClick={this.selectInstrument} />
-                    <Instrument ctx={this.props.ctx} key="HiHat" generator="HiHat" handleClick={this.selectInstrument} />
+                    <Instrument handleActiveStepChange={this.handleActiveStepChange} ctx={this.props.ctx} key="Kick" generator="Kick" handleClick={this.selectInstrument} />
+                    <Instrument handleActiveStepChange={this.handleActiveStepChange} ctx={this.props.ctx} key="Snare" generator="Snare" handleClick={this.selectInstrument} />
+                    <Instrument handleActiveStepChange={this.handleActiveStepChange} ctx={this.props.ctx} key="Clap" generator="Clap" handleClick={this.selectInstrument} />
+                    <Instrument handleActiveStepChange={this.handleActiveStepChange} ctx={this.props.ctx} key="HiHat" generator="HiHat" handleClick={this.selectInstrument} />
                 </Container>
-                <Steps handleStepChange={this.handleStepChange} steps={this.state.steps} />
+                <Steps handleStepChange={this.handleStepChange} steps={this.state.steps} activeStep={this.state.activeStep} />
             </div>
         )
     }

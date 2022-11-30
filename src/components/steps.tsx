@@ -11,7 +11,7 @@ export class Steps extends React.Component<any, any>{
             <div style={{ flex: 1, flexDirection: 'row' }}>
                 {this.props.steps.map((step, idx) => {
                     return (
-                        <Step on={step} onClick={this.props.handleStepChange} key={idx} id={idx} />
+                        <Step active={this.props.activeStep === idx} on={step} onClick={this.props.handleStepChange} key={idx} id={idx} />
                     )
                 })}
             </div>

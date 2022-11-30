@@ -8,7 +8,6 @@ export class Container extends React.Component<any, any> {
     }
 
     render() {
-        // console.log("the selected inst is", this.props.selectedInstrument);
         const childrenWithProps = React.Children.map(this.props.children, child => {
             if (typeof child === 'object' && child != null && child.key) {
                 if (child.key === this.props.selectedInstrument) {

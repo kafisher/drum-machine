@@ -8,29 +8,25 @@ import { Instruments } from './container';
 import * as Tone from 'tone';
 
 export interface InstrumentProps {
-    // key: string;
     generator: Instruments;
     steps?: boolean[];
     selected?: boolean;
     ctx: AudioContext;
     handleClick?: (generator: string, steps: boolean[]) => void;
+    handleActiveStepChange?: (id: number) => void;
 }
 
 export class Instrument extends React.Component<InstrumentProps, any> {
     private sound: any;
-    // private ctx: AudioContext;
     private loopId: number;
 
     constructor(props: any ) {
         super(props);
-        // this.ctx = new AudioContext();
         switch (props.generator) {
             case 'Kick':
-                // this.sound = new Kick(this.ctx);
                 this.sound = new Kick(this.props.ctx);
                 break;
             case 'Snare':
-                // this.sound = new Snare(this.ctx);
                 this.sound = new Snare(this.props.ctx);
                 break;
             case 'HiHat':
@@ -38,7 +34,6 @@ export class Instrument extends React.Component<InstrumentProps, any> {
                 break;
             case 'Clap':
                 this.sound = new Clap(this.props.ctx);
-                // this.sound = new Clap(this.ctx);
                 break;
         }
         this.state = {
@@ -61,6 +56,8 @@ export class Instrument extends React.Component<InstrumentProps, any> {
     }
 
     createLoop = () => {
+ 
+        // let beat = 0;
         console.log('starting loop ');
         if (!this.props.steps) { return; }
         Transport.clear(this.loopId);
@@ -70,11 +67,21 @@ export class Instrument extends React.Component<InstrumentProps, any> {
                     this.sound.trigger(time + i * Time('16n').toSeconds())
                 }
             });
+          
+            const seq = new Tone.Sequence((time, note) => {
+                this.handleActiveStepChange(note);
+                // subarray subdivision to make 16th notes
+            }, [[0,1], [2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]]).start(0);
         }
+        
         this.loopId = Transport.schedule(loop, "0");
+      
         Tone.start();
-        //this.ctx.resume();
         this.props.ctx.resume();
+    }
+
+    handleActiveStepChange = (i: number) => {
+        if (this.props.handleActiveStepChange) this.props.handleActiveStepChange(i);
     }
 
     handleClick = () => {
@@ -97,7 +104,6 @@ export class Instrument extends React.Component<InstrumentProps, any> {
                 <p>{this.props.generator}</p>
             </div >
         )
-      
     }
 }
 

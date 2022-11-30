@@ -16,7 +16,7 @@ export class Clap implements SoundGenerator {
 
     constructor(ctx: AudioContext) {
         this.tone = 130;
-        this.volume = 1;
+        this.volume = 1.5;
         this.decay = 0.3;
         this.pulseWidth = 0.025;
         this.ctx = ctx;
