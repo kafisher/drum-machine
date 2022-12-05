@@ -56,8 +56,7 @@ export class Instrument extends React.Component<InstrumentProps, any> {
     }
 
     createLoop = () => {
- 
-        // let beat = 0;
+        
         console.log('starting loop ');
         if (!this.props.steps) { return; }
         Transport.clear(this.loopId);
@@ -71,7 +70,7 @@ export class Instrument extends React.Component<InstrumentProps, any> {
             const seq = new Tone.Sequence((time, note) => {
                 this.handleActiveStepChange(note);
                 // subarray subdivision to make 16th notes
-            }, [[0,1], [2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]]).start(0);
+            }, [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]]).start(0);
         }
         
         this.loopId = Transport.schedule(loop, "0");
@@ -85,7 +84,6 @@ export class Instrument extends React.Component<InstrumentProps, any> {
     }
 
     handleClick = () => {
-        console.log(this.props);
         if (this.props.handleClick) this.props.handleClick(this.props.generator, this.state.steps.slice(0));
     }
 
