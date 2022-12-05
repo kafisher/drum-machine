@@ -21,7 +21,7 @@ export class Container extends React.Component<any, any> {
         });
         
         return (
-            <div style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                 {childrenWithProps}
             </div>
         )

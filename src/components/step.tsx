@@ -24,10 +24,10 @@ export class Step extends React.Component<StepProps> {
     
     render() { 
         const style = {
-            width: '3em',
-            height: '5em',
+            width: '2em',
+            height: '3em',
             backgroundColor: this.calculateColor(),
-            borderRadius: '10px',
+            borderRadius: '5px',
             margin: 5,
             display: 'inline-block'
         }
